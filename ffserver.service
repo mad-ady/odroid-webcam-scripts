@@ -1,0 +1,11 @@
+[Unit]
+Description=ffserver streaming server
+After=syslog.target
+
+[Service]
+ExecStart=/usr/bin/ffserver
+Type=simple
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
