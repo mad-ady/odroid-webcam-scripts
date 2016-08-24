@@ -1,0 +1,35 @@
+* original 5fps 720p, 1.5Mbps -> ~5 fps, smooth playback with out-of-sync sound
+/usr/local/bin/mjpg_streamer  -i 'input_uvc.so -r 1280x720 -m 50000 -n -f 25 -d /dev/video0' -o 'output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/ -c odroid:odroidpass'
+ffmpeg -r 5 -f mjpeg -i 'http://odroid:odroidpass@127.0.0.1:8090/?action=stream' -f alsa -i plughw:CARD=Camera,DEV=0 -acodec libmp3lame -c:v libx264 -preset ultrafast -r 5 -pix_fmt yuv420p -b:v 1500k -async 1 myvideo.mp4
+
+* 640x360 resized from ffmpeg 1Mbps -> ~9fps, quick playback with choppy sound
+/usr/local/bin/mjpg_streamer  -i 'input_uvc.so -r 1280x720 -m 50000 -n -f 25 -d /dev/video0' -o 'output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/ -c odroid:odroidpass'
+ffmpeg -f mjpeg -i 'http://odroid:odroidpass@127.0.0.1:8090/?action=stream' -f alsa -i plughw:CARD=Camera,DEV=0 -acodec libmp3lame -c:v libx264 -preset ultrafast -vf scale=640:-1 -pix_fmt yuv420p -b:v 1000k -async 1 myvideo.mp4
+
+* 320x180 resized from ffmpeg 1Mbps -> ~10fps, quick playback with choppy sound
+/usr/local/bin/mjpg_streamer  -i 'input_uvc.so -r 1280x720 -m 50000 -n -f 25 -d /dev/video0' -o 'output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/ -c odroid:odroidpass'
+ffmpeg -f mjpeg -i 'http://odroid:odroidpass@127.0.0.1:8090/?action=stream' -acodec none -c:v libx264 -preset ultrafast -vf scale=320:-1 -pix_fmt yuv420p -b:v 1000k -async 1 myvideo.mp4
+
+* 640x360 resized from ffmpeg 1Mbps with fixed frame-rate 10fps -> ~9fps, smooth playback with choppy sound
+/usr/local/bin/mjpg_streamer  -i 'input_uvc.so -r 1280x720 -m 50000 -n -f 25 -d /dev/video0' -o 'output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/ -c odroid:odroidpass'
+ffmpeg -f mjpeg -i 'http://odroid:odroidpass@127.0.0.1:8090/?action=stream' -f alsa -i plughw:CARD=Camera,DEV=0 -acodec libmp3lame -c:v libx264 -preset ultrafast -vf scale=640:-1 -pix_fmt yuv420p -b:v 1000k -async 1 myvideo.mp4
+
+* 640x480 resized from mjpg_streamer with fixed frame-rate 10fps -> 10fps, smooth playback, smooth sound, in-sync playback
+/usr/local/bin/mjpg_streamer  -i 'input_uvc.so -r 640x480 -m 10000 -n -f 25 -d /dev/video0' -o 'output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/ -c odroid:odroidpass'
+ffmpeg -r 10 -f mjpeg -i 'http://odroid:odroidpass@127.0.0.1:8090/?action=stream' -f alsa -i plughw:CARD=Camera,DEV=0 -acodec libmp3lame -c:v libx264 -preset ultrafast -vf scale=640:-1 -pix_fmt yuv420p -b:v 1000k -r 10 -async 1 myvideo.mp4
+
+* 320x240 resized from mjpg_streamer with fixed frame-rate 10fps -> ~6fps, quick playback, choppy sound
+/usr/local/bin/mjpg_streamer  -i 'input_uvc.so -r 320x240 -m 5000 -n -f 25 -d /dev/video0' -o 'output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/ -c odroid:odroidpass'
+ffmpeg -r 10 -f mjpeg -i 'http://odroid:odroidpass@127.0.0.1:8090/?action=stream' -f alsa -i plughw:CARD=Camera,DEV=0 -acodec libmp3lame -c:v libx264 -preset ultrafast -r 10 -pix_fmt yuv420p -b:v 1000k -async 1 myvideo.mp4
+
+
+
+
+* audio only -> wav -> ok
+ffmpeg -f alsa -i plughw:CARD=Camera,DEV=0 -acodec pcm_s16le -y -r 9 -async 1 myvideo.wav
+
+* audio only -> mp3 -> ok
+ffmpeg -f alsa -i plughw:CARD=Camera,DEV=0 -acodec libmp3lame -y -r 9 -async 1 myvideo.mp3
+
+* audio only -> ac3 -> ok
+ffmpeg -f alsa -i plughw:CARD=Camera,DEV=0 -acodec ac3 -y -r 9 -async 1 myvideo.ac3
