@@ -1,0 +1,10 @@
+[Unit]
+Description=mjpeg streamer server
+After=syslog.target
+
+[Service]
+ExecStart=/usr/local/bin/mjpg_streamer -i 'input_uvc.so -r 1280x720 -m 50000 -n -f 25 -d /dev/video0' -o 'output_http.so -p 8090 -w /usr/local/share/mjpg-streamer/www/ -c odroid:odroidpass'
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
