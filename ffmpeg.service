@@ -3,7 +3,7 @@ Description=ffmpeg video feed from webcam to ffserver
 After=syslog.target
 
 [Service]
-ExecStart=/usr/bin/ffmpeg -r 5 -f mjpeg -i 'http://odroid:odroidpass@127.0.0.1:8090/?action=stream' -f alsa -i plughw:CARD=Camera,DEV=0 -acodec libmp3lame -c:v libx264 -preset ultrafast -r 5 -pix_fmt yuv420p -b:v 1500k -async 1 -x264-params keyint=30:no-scenecut=1 -vf "drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf: text='Webcam feed %{localtime\\:%F %T}': fontcolor=white@0.8: x=7: y=5" -override_ffserver http://localhost:8099/mjpg-streamer.ffm
+ExecStart=/usr/bin/ffmpeg -loglevel 8 -r 5 -f mjpeg -i 'http://odroid:odroidpass@127.0.0.1:8090/?action=stream' -f alsa -i plughw:CARD=Camera,DEV=0 -acodec libmp3lame -c:v libx264 -preset ultrafast -r 5 -pix_fmt yuv420p -b:v 1500k -async 1 -x264-params keyint=30:no-scenecut=1 -vf "drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf: text='Webcam feed %{localtime\\:%F %T}': fontcolor=white@0.8: x=7: y=5" -override_ffserver http://localhost:8099/mjpg-streamer.ffm
 Type=simple
 Restart=no
 
