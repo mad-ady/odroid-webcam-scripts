@@ -1,0 +1,11 @@
+[Unit]
+Description=ffmpeg video feed from webcam to ffserver using c2enc
+After=syslog.target
+
+[Service]
+ExecStart=/usr/local/bin/ffmpeg-hardware-encoder-c2-c2enc.sh
+Type=simple
+Restart=no
+
+[Install]
+WantedBy=multi-user.target
