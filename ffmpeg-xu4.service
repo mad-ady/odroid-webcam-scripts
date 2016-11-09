@@ -1,0 +1,11 @@
+[Unit]
+Description=ffmpeg video feed from webcam to ffserver for xu3/4
+After=syslog.target
+
+[Service]
+ExecStart=/usr/bin/ffmpeg -r 25 -f mjpeg -i 'http://odroid:odroidpass@127.0.0.1:8090/?action=stream' -f alsa -i plughw:CARD=Camera,DEV=0 -acodec libmp3lame -c:v h264 -pix_fmt nv21 -b:v 1500k -vf "drawtext=fontfile=/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf: text='Webcam feed %{localtime\\:%F %T}': fontcolor=white@0.8: x=7: y=5" -override_ffserver http://localhost:8099/mjpg-streamer.ffm
+Type=simple
+Restart=no
+
+[Install]
+WantedBy=multi-user.target
