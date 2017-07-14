@@ -32,7 +32,7 @@ sleep 1
 logger -s -t $0 "Parent PID $BASHPID, feeder pid is $FEEDERPID"
 #start ffmpeg. If it dies, kill feeder and close
 logger -s -t $0 "Starting hardware encoding"
-cat $PIPE | /usr/local/bin/c2enc -w $W -h $H -f $FRAMERATE -b $BANDWIDTH | /usr/bin/ffmpeg -r $FRAMERATE -thread_queue_size 256 -f h264 -i - -thread_queue_size 32 -f alsa -i plughw:CARD=Camera,DEV=0 -acodec libmp3lame -async 1 -c:v copy -override_ffserver http://127.0.0.1:8099/mjpg-streamer.ffm
+cat $PIPE | /usr/local/bin/c2enc -w $W -h $H -f $FRAMERATE -b $BANDWIDTH | /usr/bin/ffmpeg -r $FRAMERATE -thread_queue_size 256 -f h264 -i - -thread_queue_size 32 -f pulse -server 127.0.0.1 -i alsa_input.usb-Sonix_Technology_Co.__Ltd._USB_2.0_Camera-02.analog-mono -acodec libmp3lame -async 1 -c:v copy -override_ffserver http://127.0.0.1:8099/mjpg-streamer.ffm
 #sleep 30
 
 echo "FFmpeg stopped. Cleaning up"
